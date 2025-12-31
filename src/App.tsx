@@ -5,7 +5,7 @@ import { ICONS } from './constants';
 import SecurityAnimation from './components/SecurityAnimation';
 import DefenseReport from './components/DefenseReport';
 import LegalDisclaimer from './components/LegalDisclaimer';
-import { generateEmploymentRule, generateRiskAssessment } from './services/geminiService';
+import { generateEmploymentRule, generateRiskAssessment } from './services/aiService';
 import { useFocusTrap } from './hooks/useFocusTrap';
 
 const App: React.FC = () => {
