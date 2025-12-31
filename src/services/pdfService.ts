@@ -2,8 +2,8 @@ import { PDFDocument, rgb, StandardFonts } from 'pdf-lib';
 import fontkit from '@pdf-lib/fontkit';
 import { Report, TimelineEvent, DefensePack } from '../types';
 
-// Noto Sans KR font URL (Google Fonts)
-const NOTO_SANS_KR_URL = 'https://fonts.gstatic.com/s/notosanskr/v36/PbyxFmXiEBPT4ITbgNA5Cgms3VYcOA-vvnIzzuoyeLGC5nwmHfhb.woff2';
+// Noto Sans KR font URL (Official Google Fonts OTF)
+const NOTO_SANS_KR_URL = 'https://raw.githubusercontent.com/googlefonts/noto-cjk/main/Sans/OTF/Korean/NotoSansKR-Regular.otf';
 
 interface DefensePackData {
   report: Report;
