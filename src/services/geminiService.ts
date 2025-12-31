@@ -1,8 +1,18 @@
 
 import { GoogleGenAI, Type } from "@google/genai";
 
-// Initialize the Google GenAI SDK with the API key from environment variables.
-const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+// Lazy initialization - only create the client when needed
+let _ai: GoogleGenAI | null = null;
+const getAI = (): GoogleGenAI => {
+  if (!_ai) {
+    const apiKey = process.env.API_KEY || process.env.GEMINI_API_KEY;
+    if (!apiKey) {
+      throw new Error("GEMINI_API_KEY 환경 변수가 설정되지 않았습니다. .env 파일에 GEMINI_API_KEY를 설정해주세요.");
+    }
+    _ai = new GoogleGenAI({ apiKey });
+  }
+  return _ai;
+};
 
 /**
  * 기업 취업규칙 내 괴롭힘 방지 조항 생성 (gemini-3-flash-preview)
@@ -19,7 +29,7 @@ export const generateEmploymentRule = async (companyName: string) => {
   형식: 전문적인 한국어 마크다운. 기업 취업규칙에 바로 붙여넣을 수 있는 법률 문서 형태.`;
 
   try {
-    const response = await ai.models.generateContent({
+    const response = await getAI().models.generateContent({
       model: "gemini-3-flash-preview",
       contents: prompt,
     });
@@ -68,7 +78,7 @@ export const generateRiskAssessment = async (reportContent: string) => {
 형식: 체계적인 한국어 마크다운. 객관적이고 데이터 중심적인 어조 사용.`;
 
   try {
-    const response = await ai.models.generateContent({
+    const response = await getAI().models.generateContent({
       model: "gemini-3-pro-preview",
       contents: prompt,
       config: {
@@ -90,7 +100,7 @@ export const getLegalAdvice = generateRiskAssessment;
  */
 export const triageReport = async (reportContent: string) => {
   try {
-    const response = await ai.models.generateContent({
+    const response = await getAI().models.generateContent({
       model: "gemini-3-flash-preview",
       contents: `다음 제보 내용을 분석하여 심각도와 카테고리를 분류하라: "${reportContent}"`,
       config: {
