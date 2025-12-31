@@ -22,6 +22,12 @@ export const partners = pgTable("partners", {
   keyPrefix: varchar("key_prefix", { length: 10 }).notNull(),
 
   revenueShareRate: numeric("revenue_share_rate", { precision: 5, scale: 2 }).default("0.00"),
+
+  // Iron Dome Phase 1: White-label branding fields
+  logoUrl: varchar("logo_url", { length: 500 }),
+  themeColor: varchar("theme_color", { length: 7 }), // hex color e.g., #2563EB
+  customHeaderText: varchar("custom_header_text", { length: 200 }),
+
   createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
   updatedAt: timestamp("updated_at", { withTimezone: true }).defaultNow().notNull()
 });
@@ -49,6 +55,15 @@ export const tenants = pgTable("tenants", {
     }>()
     .default({})
     .notNull(),
+
+  // Iron Dome Phase 1: Tenant-level branding overrides
+  brandConfig: jsonb("brand_config")
+    .$type<{
+      logoUrl?: string;
+      themeColor?: string;
+      customHeaderText?: string;
+      hidePartnerBranding?: boolean;
+    }>(),
 
   createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
   updatedAt: timestamp("updated_at", { withTimezone: true }).defaultNow().notNull()

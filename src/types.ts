@@ -55,6 +55,29 @@ export interface DefensePack {
   eventsCount: number;
 }
 
+/**
+ * 화이트라벨 브랜딩 설정 (Iron Dome Phase 1)
+ * Partner 또는 Tenant 레벨에서 브랜딩을 커스터마이징할 수 있습니다.
+ */
+export interface BrandConfig {
+  logoUrl?: string;
+  themeColor?: string;
+  customHeaderText?: string;
+  hidePartnerBranding?: boolean;
+}
+
+export interface Partner {
+  id: string;
+  name: string;
+  inviteCode: string;
+  keyPrefix: string;
+  revenueShareRate: string;
+  logoUrl?: string;
+  themeColor?: string;
+  customHeaderText?: string;
+  createdAt: string;
+}
+
 export interface Tenant {
   id: string;
   name: string;
@@ -70,6 +93,7 @@ export interface Tenant {
     openDays?: number;
     strictHints?: string[];
   };
+  brandConfig?: BrandConfig; // Iron Dome Phase 1: 테넌트 레벨 브랜딩 오버라이드
 }
 
 export type ViewState = 'LANDING' | 'ONBOARD' | 'HOOK_TOOL' | 'REPORT_FORM' | 'ADMIN' | 'PARTNER' | 'TRACK';

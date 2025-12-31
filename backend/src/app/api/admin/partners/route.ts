@@ -9,7 +9,11 @@ import { z } from "zod";
 
 const Create = z.object({
   name: z.string().min(2).max(120),
-  revenueShareRate: z.string().regex(/^\d+(\.\d{1,2})?$/).optional()
+  revenueShareRate: z.string().regex(/^\d+(\.\d{1,2})?$/).optional(),
+  // Iron Dome Phase 1: White-label branding fields
+  logoUrl: z.string().url().max(500).optional(),
+  themeColor: z.string().regex(/^#[0-9A-Fa-f]{6}$/).optional(),
+  customHeaderText: z.string().max(200).optional()
 });
 
 function genInviteCode() {
@@ -33,6 +37,10 @@ export async function GET(req: Request) {
     inviteCode: schema.partners.inviteCode,
     keyPrefix: schema.partners.keyPrefix,
     revenueShareRate: schema.partners.revenueShareRate,
+    // Iron Dome Phase 1: White-label fields
+    logoUrl: schema.partners.logoUrl,
+    themeColor: schema.partners.themeColor,
+    customHeaderText: schema.partners.customHeaderText,
     createdAt: schema.partners.createdAt
   }).from(schema.partners).orderBy(desc(schema.partners.createdAt));
 
@@ -70,6 +78,10 @@ export async function POST(req: Request) {
     apiKeyHash,
     keyPrefix,
     revenueShareRate: parsed.data.revenueShareRate ?? "0.00",
+    // Iron Dome Phase 1: White-label fields
+    logoUrl: parsed.data.logoUrl ?? null,
+    themeColor: parsed.data.themeColor ?? null,
+    customHeaderText: parsed.data.customHeaderText ?? null,
     createdAt: new Date(),
     updatedAt: new Date()
   });

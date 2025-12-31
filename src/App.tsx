@@ -4,7 +4,8 @@ import { ViewState, Report, ReportStatus, ReportPriority, Tenant, DefensePack } 
 import { ICONS } from './constants';
 import SecurityAnimation from './components/SecurityAnimation';
 import DefenseReport from './components/DefenseReport';
-import { generateEmploymentRule, getLegalAdvice } from './services/geminiService';
+import LegalDisclaimer from './components/LegalDisclaimer';
+import { generateEmploymentRule, generateRiskAssessment } from './services/geminiService';
 import { useFocusTrap } from './hooks/useFocusTrap';
 
 const App: React.FC = () => {
@@ -64,11 +65,11 @@ const App: React.FC = () => {
     ]);
   }, []);
 
-  const handleAiAdvice = async (report: Report) => {
+  const handleRiskAssessment = async (report: Report) => {
     setIsLoading(true);
     try {
-      const advice = await getLegalAdvice(report.content);
-      setAiAdvice(advice || '');
+      const assessment = await generateRiskAssessment(report.content);
+      setAiAdvice(assessment || '');
     } finally {
       setIsLoading(false);
     }
@@ -268,7 +269,7 @@ const App: React.FC = () => {
               </div>
               <div role="tablist" aria-label="사건 상세 탭" className="flex gap-4 pr-16">
                  <TabButton id="tab-timeline" ariaControls="panel-timeline" active={!aiAdvice} onClick={() => setAiAdvice(null)} label="Timeline" />
-                 <TabButton id="tab-strategy" ariaControls="panel-strategy" active={aiAdvice === 'STRATEGY'} onClick={() => { setAiAdvice('STRATEGY'); handleAiAdvice(selectedReport); }} label="AI Strategy" icon={<ICONS.Activity className="w-4 h-4" />} />
+                 <TabButton id="tab-strategy" ariaControls="panel-strategy" active={aiAdvice === 'STRATEGY'} onClick={() => { setAiAdvice('STRATEGY'); handleRiskAssessment(selectedReport); }} label="Risk Analysis" icon={<ICONS.Activity className="w-4 h-4" />} />
                  <TabButton id="tab-defense" ariaControls="panel-defense" active={aiAdvice === 'DEFENSE_PACK'} onClick={() => setAiAdvice('DEFENSE_PACK')} label="Defense Pack" icon={<ICONS.FileText className="w-4 h-4" />} />
               </div>
             </div>
@@ -330,7 +331,7 @@ const App: React.FC = () => {
                 <div id="panel-strategy" role="tabpanel" aria-labelledby="tab-strategy" tabIndex={0} className="bg-slate-50 p-14 rounded-[48px] border-2 border-slate-100 animate-in fade-in duration-500 prose max-w-none">
                   <div className="flex items-center gap-4 mb-12">
                     <div className="w-14 h-14 bg-blue-600 rounded-2xl flex items-center justify-center text-white shadow-2xl shadow-blue-100"><ICONS.Activity className="w-6 h-6" /></div>
-                    <h3 className="text-3xl font-black text-slate-900 tracking-tight m-0 uppercase">AI Legal Risk Assessment</h3>
+                    <h3 className="text-3xl font-black text-slate-900 tracking-tight m-0 uppercase">AI Risk Analysis Report</h3>
                   </div>
                   <div className="whitespace-pre-wrap font-sans text-slate-800 leading-loose text-xl" aria-busy={isLoading}>
                     {isLoading ? (
@@ -502,7 +503,7 @@ const App: React.FC = () => {
         </div>
       </header>
 
-      <main id="main-content" role="main" tabIndex={-1} className="pb-40 outline-none">
+      <main id="main-content" role="main" tabIndex={-1} className="pb-56 outline-none">
         {view === 'LANDING' && renderLanding()}
         {view === 'PARTNER' && renderPartner()}
         {view === 'ADMIN' && renderAdmin()}
@@ -528,6 +529,9 @@ const App: React.FC = () => {
           </div>
         </div>
       </footer>
+
+      {/* Legal Disclaimer - Iron Dome Phase 1 */}
+      <LegalDisclaimer />
     </div>
   );
 

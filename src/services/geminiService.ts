@@ -31,23 +31,41 @@ export const generateEmploymentRule = async (companyName: string) => {
 };
 
 /**
- * 사건 데이터 기반 AI 노무사 전략 자문 (gemini-3-pro-preview)
- * 복합적인 추론과 법적 조언이 필요하므로 Thinking Config를 적용합니다.
+ * 사건 데이터 기반 AI 리스크 분석 시스템 (gemini-3-pro-preview)
+ * 통계적 분석과 유사 사례 데이터를 기반으로 리스크 요인을 평가합니다.
+ * 주의: 본 결과는 법률 자문이 아닌 데이터 분석 자료입니다.
  */
-export const getLegalAdvice = async (reportContent: string) => {
-  const prompt = `너는 20년 경력의 베테랑 노무사이자 리스크 관리 전문가다. 
-  다음 접수된 직장 내 괴롭힘 제보 내용을 분석하여 경영진을 위한 방어 전략과 조치 가이드를 작성하라.
-  
-  [사건 본문]
-  "${reportContent}"
-  
-  [분석 요청 사항]
-  1. 법적 위험도 평가 (Low/Medium/High/Critical) 및 근거
-  2. 즉각 수행해야 할 필수 조치 (분리 조치, 조사 개시 통보 등)
-  3. 향후 분쟁(노동위원회 등) 발생 시 회사가 확보해야 할 면책 증빙 체크리스트
-  4. 인사팀 및 대표이사를 위한 법률적 주의사항
-  
-  형식: 체계적인 한국어 마크다운. 전문적이고 권위 있는 어조 사용.`;
+export const generateRiskAssessment = async (reportContent: string) => {
+  const prompt = `당신은 직장 내 괴롭힘 사건의 데이터 분석 시스템입니다.
+다음 접수된 제보 내용을 분석하여 객관적인 리스크 요인 평가 보고서를 작성하세요.
+
+[사건 본문]
+"${reportContent}"
+
+[분석 요청 사항]
+1. 리스크 수준 평가 (Low/Medium/High/Critical)
+   - 유사 사례 통계에 기반한 수치적 평가
+   - 판단 근거가 되는 객관적 사실 나열
+
+2. 사실 관계 체크리스트
+   - 제보 내용에서 확인 가능한 사실들 (육하원칙)
+   - 추가 확인이 필요한 사항들
+   - 객관적 증거 유무 체크
+
+3. 유사 사례 통계 참고 데이터
+   - 비슷한 유형의 사건 처리 패턴
+   - 일반적인 조치 이력 데이터
+
+4. 조직 리스크 요인 분석
+   - 현재 상황에서 발생 가능한 리스크 목록
+   - 각 리스크의 영향도 수준
+
+---
+⚠️ **[중요 안내]**
+본 분석 결과는 통계 및 데이터에 기반한 참고 자료이며, **법률적 자문이 아닙니다.**
+최종 판단 및 조치는 반드시 **전문 법률가와 상의**하십시오.
+
+형식: 체계적인 한국어 마크다운. 객관적이고 데이터 중심적인 어조 사용.`;
 
   try {
     const response = await ai.models.generateContent({
@@ -59,10 +77,13 @@ export const getLegalAdvice = async (reportContent: string) => {
     });
     return response.text;
   } catch (error) {
-    console.error("Gemini Advice Error:", error);
-    return "AI 법률 엔진 분석에 실패했습니다. 긴급 자문이 필요한 경우 담당 노무사에게 직접 연락하세요.";
+    console.error("Gemini Risk Assessment Error:", error);
+    return "리스크 분석 시스템에 오류가 발생했습니다. 잠시 후 다시 시도하거나 담당자에게 문의하세요.";
   }
 };
+
+/** @deprecated Use generateRiskAssessment instead */
+export const getLegalAdvice = generateRiskAssessment;
 
 /**
  * 사건 심각도 및 카테고리 자동 분류 (JSON 스키마 적용)
